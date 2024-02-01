@@ -1,0 +1,31 @@
+const int pirSensorPin = 7;
+const int ledPin = 3;
+volatile int pirState = LOW;
+
+void setup() {
+  pinMode(pirSensorPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+  attachInterrupt(digitalPinToInterrupt(pirSensorPin), pirInterrupt, CHANGE);
+}
+
+void loop() {
+}
+
+void pirInterrupt() {
+  int motionDetected = digitalRead(pirSensorPin);
+
+  if (motionDetected == HIGH) {
+    if (pirState == LOW) {
+      Serial.println("Motion detected!");
+      digitalWrite(ledPin, HIGH);
+      pirState = HIGH;
+    }
+  } else {
+    if (pirState == HIGH) {
+      Serial.println("Motion stopped");
+      digitalWrite(ledPin, LOW);
+      pirState = LOW;
+    }
+  }
+}
